@@ -15,16 +15,16 @@ If you're new to Blockchain and NFTs, you might find it interesting!
 ## In a hurry
 
 - Clone this repository
-- Install the dependencies `npm install`[1]
-- Create a new file `src/nft.ts`[2]
-- Export a default function of type `NFTCreateFn`[3]
-- Implement the interface & types from `src/supporting.ts`
-- Run the tests to verify your solution `npm test`[4]
+- Install the dependencies `npm install`<sup>[1]</sup>
+- Create a new file `src/nft.ts`<sup>[2]</sup>
+- Export a default function of type `NFTCreateFn`
+- Implement necessary interfaces & types in `src/supporting.ts`
+- Run the tests to verify your solution `npm test`<sup>[3]</sup>
 - Email your solution to careers@medallion.fm
 
-## Introduction
+## The problem
 
-At a basic level, the Ethereum NFT spec allows tracking ownership of
+At a basic level, the Ethereum NFT (ERC721) spec allows tracking ownership of
 distinguishable assets. Each owner is represented by a string address, and each
 asset by a unique integer.
 
@@ -35,29 +35,37 @@ keeps track of assets and their owners, implementing the following methods:
 - `ownerOf` returns the owner of a specific asset
 - `transferFrom` transfers an asset from one owner to another
 
-You'll also need a function which accepts a list of owners and balances
-to initialise the assets (with sequential, zero-indexed, integer identifiers)
-and returns the object.
+Your solution should take the form of a function which accepts a list of owners
+and balances to initialise the assets (with sequential, zero-indexed, integer
+identifiers) and returns an object implementing these methods.
 
-**We'll check your submission against the provided test suite, following the
-developer comments found in `src/supporting.ts`. However, we're looking for a
+```
+const owners: NFTHolder[] = [["0xAB…CD", 2], …, ["0x12…34", 1]];
+```
+
+**We'll check your submission against the provided test suite, which is based
+on the comments found in `src/supporting.ts`. However, we're looking for a
 good approach to the problem, not a perfect solution.**
+
+## Submitting
+
+Please send your solution to careers@medallion.fm in whatever form you prefer,
+just do you best to make it easy for us to access, and parse (no JPEGs!)
 
 ## Supporting files
 
-While you only need to submit a single `.ts` (or `.js`) file, we're providing
-these to (hopefully) help make development easier:
+While you only need to submit a single `.ts` (or `.js`) file, we've provided
+a basic development environment help make things easier:
 
 - `src/supporting.ts` predefined types and interfaces
 - `src/nft.spec.ts` a test suite for the exercise
 - `.mocharc.json` configuration for running tests
-- `package.json, package-lock.json` project dependencies
+- `package.json, package-lock.json` development dependencies
 - `tsconfig.json` TypeScript configuration for the exercise
 - `README.md` the instructions you're reading right now!
 
 ## Notes
 
 1. Feel to use another package manager if you'd like
-2. You can use plain JS if you're not comfortable with TypeScript
-3. Types and interfaces can be found in `src/supporting.ts`
-4. Running (and passing) the tests is optional
+2. You can use plain JS, although we'd prefer TypeScript
+3. Running (and passing) the tests is optional

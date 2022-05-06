@@ -1,6 +1,6 @@
 import { beforeEach, describe } from "mocha";
 import { expect } from "chai";
-import { ZeroAddress, NFT } from "./supporting";
+import { ZeroAddress, NFT, NFTHolder } from "./supporting";
 import createFn from "./nft";
 
 const TEST_ACCOUNTS: string[] = [
@@ -145,6 +145,53 @@ describe("Medallion TypeScript exercise", () => {
     it("transferFrom should throw to zero address", () => {
       expect(nft.ownerOf(0)).to.equal(acc1);
       expect(() => nft.transferFrom(acc1, acc1, ZeroAddress, 0)).to.throw();
+    });
+  });
+
+  describe("interesting initializations", () => {
+    it("should handle repeated owners", () => {
+      const [acc1, acc2] = TEST_ACCOUNTS;
+      const nft = createFn([
+        [acc1, 1],
+        [acc2, 2],
+        [acc1, 2],
+      ]);
+
+      expect(nft.balanceOf(acc1)).to.equal(3);
+      expect(nft.balanceOf(acc2)).to.equal(2);
+      expect(nft.ownerOf(0)).to.equal(acc1);
+      expect(nft.ownerOf(1)).to.equal(acc2);
+      expect(nft.ownerOf(2)).to.equal(acc2);
+      expect(nft.ownerOf(3)).to.equal(acc1);
+      expect(nft.ownerOf(4)).to.equal(acc1);
+    });
+
+    it("should handle a large number of holders", () => {
+      const holders: NFTHolder[] = [];
+      let nextTokenId = 0;
+      const tokens: Record<number, string> = {};
+      const balances: Record<string, number> = {};
+      for (let i = 0; i < 10000; i++) {
+        const holderIdx = Math.floor(Math.random() * TEST_ACCOUNTS.length);
+        const holder = TEST_ACCOUNTS[holderIdx];
+        const balance = Math.floor(Math.random() * 100);
+        holders.push([holder, balance]);
+        balances[holder] = balances[holder] + balance || balance;
+        for (let j = 0; j < balance; j++) {
+          tokens[nextTokenId++] = holder;
+        }
+      }
+      const nft = createFn(holders);
+
+      const [acc1, acc2, acc3] = TEST_ACCOUNTS;
+      expect(nft.balanceOf(acc1)).to.equal(balances[acc1]);
+      expect(nft.balanceOf(acc2)).to.equal(balances[acc2]);
+      expect(nft.balanceOf(acc3)).to.equal(balances[acc3]);
+
+      expect(nft.ownerOf(9)).to.equal(tokens[9]);
+      expect(nft.ownerOf(99)).to.equal(tokens[99]);
+      expect(nft.ownerOf(999)).to.equal(tokens[999]);
+      expect(nft.ownerOf(9999)).to.equal(tokens[9999]);
     });
   });
 });
